@@ -86,7 +86,7 @@ public class Folder implements Comparable<Folder>{
                                 isContained = false;
                                 break;
                             }
-                            i += 2; // skip OR
+                            i += 2; // skip OR and right kw
                         }
                         else if (n instanceof TextNote) {
                             if (n.getTitle().toLowerCase().contains(separatedKeywordArray[i]) || n.getTitle().toLowerCase().contains(separatedKeywordArray[i+2]) || ((TextNote) n).content.toLowerCase().contains(separatedKeywordArray[i]) || ((TextNote) n).content.toLowerCase().contains(separatedKeywordArray[i+2])) {
