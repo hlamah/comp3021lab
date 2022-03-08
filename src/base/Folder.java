@@ -1,9 +1,11 @@
 package base;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 
-public class Folder {
+public class Folder implements Comparable<Folder>{
     private ArrayList<Note> notes;
     private String name;
 
@@ -57,4 +59,75 @@ public class Folder {
 
         return name + ":" + nText + ":" + nImage;
     }
+
+    @Override
+    public int compareTo(Folder o) {
+        // smaller name -> smaller
+        return this.name.compareTo(o.name);
+    }
+
+    public void sortNotes() { Collections.sort(notes); }
+
+    public ArrayList<Note> searchNotes(String keywords) {
+        ArrayList<Note> result = new ArrayList<Note>();
+
+        String[] separatedKeywordArray = keywords.toLowerCase().split(" ");
+
+        for (Note n : notes) {
+            boolean isContained = true;
+            for (int i = 0; i < separatedKeywordArray.length; ++i) {
+                if (separatedKeywordArray[i+1].equals("or")) {
+                    if((i+2) < separatedKeywordArray.length) { // whether the kw to the right of OR exist
+                        if (n instanceof ImageNote) {
+                            if (n.getTitle().toLowerCase().contains(separatedKeywordArray[i]) || n.getTitle().toLowerCase().contains(separatedKeywordArray[i+2])) {
+                                isContained = true;
+                            }
+                            else {
+                                isContained = false;
+                                break;
+                            }
+                            i += 2; // skip OR
+                        }
+                        else if (n instanceof TextNote) {
+                            if (n.getTitle().toLowerCase().contains(separatedKeywordArray[i]) || n.getTitle().toLowerCase().contains(separatedKeywordArray[i+2]) || ((TextNote) n).content.toLowerCase().contains(separatedKeywordArray[i]) || ((TextNote) n).content.toLowerCase().contains(separatedKeywordArray[i+2])) {
+                                isContained = true;
+                            }
+                            else {
+                                isContained = false;
+                                break;
+                            }
+                            i += 2;
+                        }
+                    }
+                }
+
+                else { // the kw after is not OR
+                    if (n instanceof ImageNote) {
+                        if (n.getTitle().toLowerCase().contains(separatedKeywordArray[i])) {
+                            isContained = true;
+                        }
+                        else {
+                            isContained = false;
+                            break;
+                        }
+                    }
+                    else if (n instanceof TextNote) {
+                        if (n.getTitle().toLowerCase().contains(separatedKeywordArray[i]) || ((TextNote) n).content.toLowerCase().contains(separatedKeywordArray[i])) {
+                            isContained = true;
+                        }
+                        else {
+                            isContained = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (isContained)
+                result.add(n);
+        }
+        return result;
+    }
+
+
 }
