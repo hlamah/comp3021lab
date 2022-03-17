@@ -2,10 +2,11 @@ package base;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Objects;
+import java.io.Serializable;
 
-public class Folder implements Comparable<Folder>{
+public class Folder implements Comparable<Folder>, Serializable{
+
     private ArrayList<Note> notes;
     private String name;
 
@@ -56,7 +57,6 @@ public class Folder implements Comparable<Folder>{
                 nImage++;
             }
         }
-
         return name + ":" + nText + ":" + nImage;
     }
 
@@ -128,6 +128,5 @@ public class Folder implements Comparable<Folder>{
         }
         return result;
     }
-
 
 }
